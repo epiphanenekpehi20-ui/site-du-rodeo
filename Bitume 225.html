@@ -1,0 +1,439 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Rodéo Basketball</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=Big+Shoulders+Display:wght@800;900&display=swap">
+<style>
+/* Concept : une page de terrain. Les lignes du playground (trait craie sur bitume) structurent chaque section. */
+:root {
+  --bg: #e3e6e8;
+  --surface: #f2f4f5;
+  --fg: #121a24;
+  --muted: #55606c;
+  --line: #121a24;
+  --court: #1b45c9;
+  --court-ink: #ffffff;
+  --ball: #e8590c;
+  --rule: rgba(18, 26, 36, 0.18);
+  --font-display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --font-body: "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-label: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1420;
+    --surface: #152033;
+    --fg: #eef1f5;
+    --muted: #9aa7b8;
+    --line: #eef1f5;
+    --court: #3b63e0;
+    --court-ink: #ffffff;
+    --ball: #ff8a4a;
+    --rule: rgba(238, 241, 245, 0.2);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1420;
+  --surface: #152033;
+  --fg: #eef1f5;
+  --muted: #9aa7b8;
+  --line: #eef1f5;
+  --court: #3b63e0;
+  --court-ink: #ffffff;
+  --ball: #ff8a4a;
+  --rule: rgba(238, 241, 245, 0.2);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--font-display); text-transform: uppercase; line-height: 0.92; margin: 0; text-wrap: balance; letter-spacing: 0.01em; }
+p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--ball); outline-offset: 3px; }
+.label { font-family: var(--font-label); font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.82rem; color: var(--muted); }
+
+.notice {
+  font-family: var(--font-label); font-size: 0.9rem; letter-spacing: 0.04em;
+  background: var(--fg); color: var(--bg);
+  margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  padding: 8px max(16px, env(safe-area-inset-right, 0px)) 8px max(16px, env(safe-area-inset-left, 0px));
+}
+
+/* HERO */
+.hero { padding-block: 40px 44px; border-bottom: 3px solid var(--line); display: grid; gap: 28px; }
+.hero h1 { font-size: clamp(4.2rem, 21vw, 11rem); font-weight: 900; }
+.hero h1 span { color: var(--court); }
+.hero .tag { font-size: 1.15rem; max-width: 34ch; }
+.hero .facts { display: flex; flex-wrap: wrap; gap: 10px 28px; }
+.hero .facts div { min-width: 0; }
+.hero .facts b { display: block; font-family: var(--font-display); font-size: 1.9rem; font-weight: 800; line-height: 1; }
+.nav { display: flex; flex-wrap: wrap; gap: 8px; }
+.nav a {
+  font-family: var(--font-label); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+  text-decoration: none; padding: 10px 16px; border: 2px solid var(--line);
+}
+.nav a:first-child { background: var(--court); border-color: var(--court); color: var(--court-ink); }
+.nav a:hover { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+
+section { padding-block: 52px; border-bottom: 3px solid var(--line); }
+.sec-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; margin-bottom: 28px; }
+.sec-head h2 { font-size: clamp(2.6rem, 10vw, 4.6rem); font-weight: 900; }
+
+/* TERRAIN */
+.terrain { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+@media (min-width: 820px) { .terrain { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; } }
+.court-card { background: var(--court); padding: 14px; }
+.court-card svg { display: block; width: 100%; height: auto; max-width: 100%; }
+.court-card figcaption { color: var(--court-ink); font-family: var(--font-label); letter-spacing: 0.06em; font-size: 0.9rem; padding-top: 10px; opacity: 0.9; }
+.c-line { fill: none; stroke: #fff; stroke-width: 3; stroke-linejoin: round; }
+.c-hoop { fill: none; stroke: #ff9a52; stroke-width: 4; }
+.dot { fill: #fff; stroke: #fff; stroke-width: 2; transition: fill 0.15s, r 0.15s; }
+.dot-t { font-family: var(--font-display); font-weight: 900; font-size: 19px; fill: var(--court); text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.dot-g.on .dot { fill: #ff9a52; stroke: #fff; }
+.dot-g.on .dot-t { fill: #1a1208; }
+.dot-g.dim { opacity: 0.35; }
+.dot-g { transition: opacity 0.15s; }
+.spec { list-style: none; margin: 0; padding: 0; }
+.spec li { display: grid; grid-template-columns: minmax(0, 9ch) minmax(0, 1fr); gap: 16px; padding: 13px 0; border-top: 1px solid var(--rule); }
+.spec li:last-child { border-bottom: 1px solid var(--rule); }
+.spec .label { padding-top: 3px; }
+.spec strong { font-weight: 600; }
+.lede { font-size: 1.08rem; margin-bottom: 18px; max-width: 52ch; }
+
+/* JOUEURS */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+.chip {
+  font-family: var(--font-label); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.95rem;
+  background: transparent; color: var(--fg); border: 2px solid var(--line); padding: 8px 14px; cursor: pointer;
+}
+.chip:hover { background: var(--surface); }
+.chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.roster { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; list-style: none; padding: 0; margin: 0; }
+.player { background: var(--surface); border: 2px solid var(--line); padding: 14px 16px 16px; display: grid; gap: 6px; min-width: 0; }
+.player .num { font-family: var(--font-display); font-weight: 900; font-size: 4.6rem; line-height: 0.85; color: var(--court); }
+.player h3 { font-size: 1.7rem; font-weight: 800; }
+.player .pos { font-family: var(--font-label); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem; display: inline-block; width: fit-content; background: var(--ball); color: #1a0f06; padding: 2px 8px; }
+.player p { color: var(--muted); font-size: 0.95rem; }
+.player[hidden] { display: none !important; }
+
+/* PHOTOS */
+.player .shot { width: 100%; max-width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block; margin-bottom: 8px; background: var(--bg); }
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; list-style: none; padding: 0; margin: 0; }
+.slot { min-width: 0; display: grid; gap: 8px; align-content: start; }
+.frame { aspect-ratio: 4 / 5; max-width: 100%; border: 2px solid var(--line); background: var(--surface); display: grid; place-items: center; overflow: hidden; }
+.frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.frame .ph { font-family: var(--font-display); font-weight: 900; font-size: 6rem; color: var(--court); opacity: 0.35; line-height: 1; }
+.slot .meta { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slot .meta b { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: 1.4rem; line-height: 1; }
+.slot .meta span { font-family: var(--font-label); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.8rem; color: var(--muted); text-align: right; }
+.slot .acts { display: flex; flex-wrap: wrap; gap: 6px; }
+.mini { font-family: var(--font-label); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.85rem; padding: 8px 12px; border: 2px solid var(--line); background: var(--court); color: var(--court-ink); border-color: var(--court); cursor: pointer; }
+.mini:hover { background: var(--fg); border-color: var(--fg); color: var(--bg); }
+.mini.ghost { background: transparent; color: var(--fg); border-color: var(--line); }
+.mini[disabled] { opacity: 0.5; cursor: wait; }
+.status { min-height: 1.5em; margin-bottom: 14px; font-family: var(--font-label); font-weight: 600; letter-spacing: 0.04em; }
+
+/* CALENDRIER */
+.cal { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
+@media (min-width: 820px) { .cal { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); } }
+.games { list-style: none; margin: 0; padding: 0; border-top: 3px solid var(--line); }
+.game { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--rule); align-items: center; }
+.game .date { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; text-align: center; line-height: 0.9; border: 2px solid var(--line); padding: 8px 4px 6px; }
+.game .date small { display: block; font-family: var(--font-label); font-weight: 600; letter-spacing: 0.12em; font-size: 0.78rem; color: var(--muted); }
+.game .date b { display: block; font-size: 2.3rem; }
+.game h3 { font-size: 1.6rem; font-weight: 800; margin-bottom: 4px; }
+.game p { color: var(--muted); font-size: 0.95rem; }
+.kind { font-family: var(--font-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.78rem; padding: 1px 7px; margin-right: 8px; vertical-align: 3px; border: 2px solid var(--line); }
+.kind.match { background: var(--court); border-color: var(--court); color: var(--court-ink); }
+.week { background: var(--surface); border: 2px solid var(--line); padding: 20px; align-self: start; }
+.week h3 { font-size: 2rem; font-weight: 800; margin-bottom: 14px; }
+.week ul { list-style: none; margin: 0; padding: 0; }
+.week li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--rule); }
+.week li span:last-child { text-align: right; font-weight: 600; }
+
+/* CONTACT */
+.contact { display: grid; gap: 16px; }
+.contact h2 { font-size: clamp(2.6rem, 10vw, 4.6rem); font-weight: 900; }
+.contact p { max-width: 52ch; font-size: 1.08rem; }
+.handle { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.handle code { font-family: var(--font-label); font-weight: 700; font-size: 1.3rem; letter-spacing: 0.04em; background: var(--surface); border: 2px solid var(--line); padding: 8px 14px; user-select: all; overflow-wrap: anywhere; }
+.copy { font-family: var(--font-label); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; background: var(--court); color: var(--court-ink); border: 0; padding: 12px 18px; cursor: pointer; }
+.copy:hover { background: var(--fg); color: var(--bg); }
+footer { padding-top: 22px; color: var(--muted); font-size: 0.9rem; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+
+<header class="hero" id="top">
+  <p class="label">Basket de rue · Yopougon Niangon sud à gauche</p>
+  <h1>Rodéo <span>Basketball</span></h1>
+  <p class="tag">Une équipe, un terrain. Venez voir, venez défier.</p>
+  <div class="facts">
+    <div><b>15</b><span class="label">joueurs</span></div>
+    <div><b>Mardi, Jeudi, Vendredi, Samedi de 16h00 à 18h30</b><span class="label">Jours de match</span></div>
+    <div><b>1 terrain</b><span class="label">le nôtre</span></div>
+  </div>
+  <nav class="nav" aria-label="Sections">
+    <a href="#terrain">Le terrain</a>
+    <a href="#joueurs">Les joueurs</a>
+    <a href="#photos">Les photos</a>
+    <a href="#matchs">Les matchs</a>
+    <a href="#contact">Nous défier</a>
+  </nav>
+</header>
+
+<section id="terrain">
+  <div class="sec-head"><h2>Le terrain</h2><span class="label">Là où ça se passe</span></div>
+  <div class="terrain">
+    <figure class="court-card" style="margin:0">
+      <svg viewBox="0 0 500 380" role="img" aria-label="Demi-terrain avec la position des cinq postes de jeu">
+        <rect x="14" y="14" width="472" height="352" class="c-line" style="stroke-width:0"></rect>
+        <path class="c-line" d="M30 20 L30 108.5 A223 223 0 0 0 470 108.5 L470 20"></path>
+        <path class="c-line" d="M2 20 H498"></path>
+        <rect class="c-line" x="169" y="20" width="162" height="193"></rect>
+        <path class="c-line" d="M190 213 A60 60 0 0 0 310 213"></path>
+        <path class="c-line" stroke-dasharray="7 7" d="M190 213 A60 60 0 0 1 310 213"></path>
+        <path class="c-line" d="M222 60 H278"></path>
+        <path class="c-line" d="M250 60 V64"></path>
+        <circle class="c-hoop" cx="250" cy="72" r="8"></circle>
+        <g class="dot-g" data-pos="Meneur"><circle class="dot" cx="250" cy="322" r="17"></circle><text class="dot-t" x="250" y="322">1</text></g>
+        <g class="dot-g" data-pos="Arrière"><circle class="dot" cx="96" cy="236" r="17"></circle><text class="dot-t" x="96" y="236">2</text></g>
+        <g class="dot-g" data-pos="Ailier"><circle class="dot" cx="404" cy="236" r="17"></circle><text class="dot-t" x="404" y="236">3</text></g>
+        <g class="dot-g" data-pos="Ailier fort"><circle class="dot" cx="132" cy="120" r="17"></circle><text class="dot-t" x="132" y="120">4</text></g>
+        <g class="dot-g" data-pos="Pivot"><circle class="dot" cx="290" cy="128" r="17"></circle><text class="dot-t" x="290" y="128">5</text></g>
+      </svg>
+      <figcaption>Demi-terrain : 1 meneur, 2 arrière, 3 ailier, 4 ailier fort, 5 pivot. Choisis un poste plus bas pour le voir s'allumer.</figcaption>
+    </figure>
+    <div>
+      <p class="lede">Notre terrain, c'est notre maison. Du béton, un panier, et des voisins qui s'arrêtent regarder. Il s'agit d'un demi-terrain qui se situe dans un parking. Les matchs se jouent à 4 contre 4. Nous formons au maximum 3 équipes de 4 joueurs en fonction du nombre de joueurs présents.</p>
+      <ul class="spec">
+        <li><span class="label">Lieu</span><span><strong>Terrain du quartier Rodéo</strong>, Yopugon</span></li>
+        <li><span class="label">Sol</span><span>Béton, lignes peintes à la main</span></li>
+        <li><span class="label">Paniers</span><span>1 panier avec un filet sur l'arceau</span></li>
+        <li><span class="label">Lumière</span><span>Éclairage le soir, jeu possible jusqu'à 19h</span></li>
+        <li><span class="label">Accès</span><span>Libre pour regarder, sur invitation pour jouer</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="joueurs">
+  <div class="sec-head"><h2>Les joueurs</h2><span class="label">Cinq postes, 15 visages</span></div>
+  <div class="chips" id="chips" role="group" aria-label="Filtrer par poste"></div>
+  <ul class="roster" id="roster"></ul>
+</section>
+
+<section id="photos">
+  <div class="sec-head"><h2>Les photos</h2><span class="label">Un portrait par joueur</span></div>
+  <p class="lede" id="photo-hint">Chaque joueur a sa case. Les photos apparaissent aussi sur sa fiche.</p>
+  <p class="status" id="status" role="status"></p>
+  <ul class="gallery" id="gallery"></ul>
+  <input type="file" id="file" accept="image/*" hidden>
+</section>
+
+<section id="matchs">
+  <div class="sec-head"><h2>Les matchs</h2></div>
+  <div class="cal">
+    <ol class="games" id="games" style="list-style:none"></ol>
+    <aside class="week">
+      <h3>Chaque semaine</h3>
+      <ul>
+        <li><span>Mardi</span><span>16h à 18h30</span></li>
+        <li><span>Jeudi</span><span>16h à 18h30</span></li>
+        <li><span>Vendredi</span><span>16h à 18h30</span></li>
+        <li><span>Samedi</span><span>16h00 à 18h30</span></li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section id="contact" style="border-bottom:0">
+  <div class="contact">
+    <h2>Nous défier</h2>
+    <p>Une équipe de ton quartier veut jouer contre nous ? Écris-nous avec le nom de ton équipe et le jour qui t'arrange.</p>
+    <div class="handle">
+      <code id="handle">0102149000</code>
+      <button class="copy" id="copy" type="button">Copier</button>
+    </div>
+    <footer>Que le Seigneur nous bénisse !!!!</footer>
+  </div>
+</section>
+
+</div>
+
+<script>
+var POSTES = ["Meneur", "Arrière", "Ailier", "Ailier fort", "Pivot"];
+var JOUEURS = [
+  { n: 7,  nom: "Kouassi",  poste: "Meneur",      note: "Voit le jeu avant les autres. Passe aveugle en transition." },
+  { n: 23, nom: "Yao",      poste: "Arrière",     note: "Tir à trois points, surtout dans le coin gauche." },
+  { n: 11, nom: "Ibrahim",  poste: "Arrière",     note: "Rapide au contre, défenseur sur le meilleur adversaire." },
+  { n: 5,  nom: "Serge",    poste: "Ailier",      note: "Joueur polyvalent, prend les rebonds et lance le jeu." },
+  { n: 14, nom: "Aboubakar",poste: "Ailier",      note: "Pénètre et finit au cercle avec les deux mains." },
+  { n: 32, nom: "Franck",   poste: "Ailier fort", note: "Travaille dans la raquette, écrans solides." },
+  { n: 9,  nom: "Moussa",   poste: "Ailier fort", note: "Énergie sur le banc, grosse présence aux rebonds." },
+  { n: 50, nom: "Junior",   poste: "Pivot",       note: "Le plus grand de l'équipe. Contre tout ce qui passe." }
+];
+var MATCHS = [
+  { j: "Ven", d: "16", m: "oct", kind: "Match",  titre: "Amical",  lieu: "Notre terrain · 16h00" },
+  { j: "Sam", d: "17", m: "oct", kind: "Match",  titre: "Amical",  lieu: "Notre terrain · 16h00" },
+  { j: "Mard", d: "20", m: "oct", kind: "Match", titre: "Amical",  lieu: "Notre terrain · 16h00" },
+  { j: "Jeu", d: "22", m: "oct", kind: "Match",  titre: "Amical",  lieu: "Notre terrain · 16h00" }
+];
+
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+var actif = "Tous";
+var chips = document.getElementById("chips");
+var roster = document.getElementById("roster");
+
+function rendreChips() {
+  chips.innerHTML = ["Tous"].concat(POSTES).map(function (p) {
+    return '<button type="button" class="chip" data-p="' + esc(p) + '" aria-pressed="' + (p === actif) + '">' + esc(p) + "</button>";
+  }).join("");
+}
+var PHOTOS = {};
+var ASSETS = null, DB = null, CAN = false, cible = null;
+function pid(j) { return "p" + j.n; }
+function rendreJoueurs() {
+  roster.innerHTML = JOUEURS.map(function (j) {
+    var img = PHOTOS[pid(j)] ? '<img class="shot" src="/_blob/' + esc(PHOTOS[pid(j)]) + '" alt="Photo de ' + esc(j.nom) + '" loading="lazy">' : "";
+    return '<li class="player" data-poste="' + esc(j.poste) + '">' + img + '<span class="num">' + j.n + "</span><h3>" + esc(j.nom) + '</h3><span class="pos">' + esc(j.poste) + "</span><p>" + esc(j.note) + "</p></li>";
+  }).join("");
+}
+function appliquer() {
+  var cartes = roster.querySelectorAll(".player");
+  for (var i = 0; i < cartes.length; i++) {
+    cartes[i].hidden = !(actif === "Tous" || cartes[i].getAttribute("data-poste") === actif);
+  }
+  var dots = document.querySelectorAll(".dot-g");
+  for (var k = 0; k < dots.length; k++) {
+    var est = dots[k].getAttribute("data-pos") === actif;
+    dots[k].classList.toggle("on", est);
+    dots[k].classList.toggle("dim", actif !== "Tous" && !est);
+  }
+  var boutons = chips.querySelectorAll(".chip");
+  for (var b = 0; b < boutons.length; b++) {
+    boutons[b].setAttribute("aria-pressed", boutons[b].getAttribute("data-p") === actif ? "true" : "false");
+  }
+}
+chips.addEventListener("click", function (e) {
+  var t = e.target.closest(".chip");
+  if (!t) return;
+  actif = t.getAttribute("data-p");
+  appliquer();
+});
+
+document.getElementById("games").innerHTML = MATCHS.map(function (g) {
+  var match = g.kind === "Match";
+  return '<li class="game"><div class="date"><small>' + esc(g.j) + "</small><b>" + esc(g.d) + "</b><small>" + esc(g.m) + '</small></div><div><h3><span class="kind' + (match ? " match" : "") + '">' + esc(g.kind) + "</span>" + esc(g.titre) + "</h3><p>" + esc(g.lieu) + "</p></div></li>";
+}).join("");
+
+var copier = document.getElementById("copy");
+copier.addEventListener("click", function () {
+  var txt = document.getElementById("handle").textContent;
+  var fin = function () { copier.textContent = "Copié"; setTimeout(function () { copier.textContent = "Copier"; }, 1600); };
+  try {
+    navigator.clipboard.writeText(txt).then(fin, function () {
+      var r = document.createRange(); r.selectNodeContents(document.getElementById("handle"));
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    });
+  } catch (err) {
+    var r2 = document.createRange(); r2.selectNodeContents(document.getElementById("handle"));
+    var s2 = window.getSelection(); s2.removeAllRanges(); s2.addRange(r2);
+  }
+});
+
+function rendreGalerie() {
+  document.getElementById("gallery").innerHTML = JOUEURS.map(function (j) {
+    var id = pid(j), a = PHOTOS[id];
+    var cadre = a ? '<img src="/_blob/' + esc(a) + '" alt="Photo de ' + esc(j.nom) + '" loading="lazy">' : '<span class="ph">' + j.n + "</span>";
+    var acts = CAN ? '<div class="acts"><button type="button" class="mini" data-act="pick" data-id="' + id + '">' + (a ? "Changer" : "Ajouter la photo") + "</button>" + (a ? '<button type="button" class="mini ghost" data-act="del" data-id="' + id + '">Retirer</button>' : "") + "</div>" : "";
+    return '<li class="slot"><div class="frame">' + cadre + '</div><div class="meta"><b>' + esc(j.nom) + "</b><span>" + esc(j.poste) + "</span></div>" + acts + "</li>";
+  }).join("");
+}
+function dire(t) { document.getElementById("status").textContent = t; }
+function reduire(file) {
+  return new Promise(function (ok, ko) {
+    var url = URL.createObjectURL(file), im = new Image();
+    im.onload = function () {
+      var r = Math.min(1, 1000 / Math.max(im.width, im.height));
+      var c = document.createElement("canvas");
+      c.width = Math.round(im.width * r); c.height = Math.round(im.height * r);
+      c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      c.toBlob(function (b) { b ? ok(b) : ko(new Error("blob")); }, "image/jpeg", 0.85);
+    };
+    im.onerror = function () { URL.revokeObjectURL(url); ko(new Error("image")); };
+    im.src = url;
+  });
+}
+document.getElementById("gallery").addEventListener("click", async function (e) {
+  var b = e.target.closest("button[data-act]");
+  if (!b || !CAN) return;
+  var id = b.getAttribute("data-id");
+  if (b.getAttribute("data-act") === "pick") { cible = id; document.getElementById("file").click(); return; }
+  b.disabled = true;
+  try {
+    var old = PHOTOS[id];
+    await DB.doc("photos/" + id).delete();
+    if (old) { try { await ASSETS.delete(old); } catch (x) {} }
+    dire("Photo retirée.");
+  } catch (err) { dire("Impossible de retirer la photo. Réessaie."); b.disabled = false; }
+});
+document.getElementById("file").addEventListener("change", async function (e) {
+  var f = e.target.files && e.target.files[0], id = cible;
+  e.target.value = "";
+  if (!f || !id || !CAN) return;
+  dire("Envoi de la photo…");
+  try {
+    var blob = await reduire(f);
+    var res = await ASSETS.upload(blob, { type: "image/jpeg" });
+    var old = PHOTOS[id];
+    await DB.doc("photos/" + id).set({ asset: res.id });
+    if (old && old !== res.id) { try { await ASSETS.delete(old); } catch (x) {} }
+    dire("Photo enregistrée.");
+  } catch (err) {
+    dire(err && err.code === "too_large" ? "Photo trop lourde." : "L'envoi a échoué. Choisis une autre photo ou réessaie.");
+  }
+});
+async function initPhotos() {
+  try { if (window.claude && window.claude.use) { ASSETS = await window.claude.use("assets"); DB = await window.claude.use("db"); } } catch (e) {}
+  CAN = !!(ASSETS && DB);
+  document.getElementById("photo-hint").textContent = CAN
+    ? "Appuie sur « Ajouter la photo » sous chaque joueur. La photo est réduite puis enregistrée pour tout le monde."
+    : "Chaque joueur a sa case. Les photos apparaissent aussi sur sa fiche. Seul le propriétaire du site peut les modifier.";
+  rendreGalerie();
+  if (DB) {
+    try {
+      DB.collection("photos").onSnapshot(function (snap) {
+        var p = {};
+        snap.docs.forEach(function (d) { var v = d.data(); if (v && v.asset) p[d.id] = v.asset; });
+        PHOTOS = p;
+        rendreGalerie(); rendreJoueurs(); appliquer();
+      }, function () {});
+    } catch (e) {}
+  }
+}
+
+rendreChips();
+rendreJoueurs();
+rendreGalerie();
+appliquer();
+initPhotos();
+</script>
+
+</body></html>
